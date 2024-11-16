@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Método para agregar un nuevo medicamento
+
     public long addMedicamento(Medicamento medicamento) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    // Método para obtener todos los medicamentos
+
     public List<Medicamento> getAllMedicamentos() {
         List<Medicamento> medicamentoList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -106,7 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return medicamentoList;
     }
 
-    // Método para obtener un medicamento por su nombre
+
     public Medicamento getMedicamentoByName(String nombre) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -136,7 +136,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return medicamento;
     }
 
-    // Método para actualizar un medicamento
+
+    public void deleteMedicamento(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+
     public int updateMedicamento(Medicamento medicamento) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -147,26 +154,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PRESENTACION, medicamento.getPresentacion());
         values.put(COLUMN_DESCRIPCION, medicamento.getDescripcion());
 
-        int rowsAffected = 0;
-        try {
-            rowsAffected = db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(medicamento.getId())});
-        } catch (SQLException e) {
-            Log.e("DatabaseHelper", "Error al actualizar medicamento", e);
-        } finally {
-            db.close();
-        }
+        int rowsAffected = db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(medicamento.getId())});
+        db.close();
         return rowsAffected;
     }
 
-    // Método para eliminar un medicamento
-    public void deleteMedicamento(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
-        } catch (SQLException e) {
-            Log.e("DatabaseHelper", "Error al eliminar medicamento", e);
-        } finally {
-            db.close();
-        }
-    }
+
 }

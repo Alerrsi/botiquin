@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ViewItemsActivity">
 
-    <!-- Campo de búsqueda -->
+
     <EditText
         android:id="@+id/editTextSearch"
         android:layout_width="0dp"
@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="8dp"/>
 
-    <!-- RecyclerView para mostrar los remedios -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewItems"
         android:layout_width="0dp"

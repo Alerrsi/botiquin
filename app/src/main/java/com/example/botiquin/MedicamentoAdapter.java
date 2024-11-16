@@ -1,9 +1,11 @@
 package com.example.botiquin;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.botiquin.R;
@@ -12,12 +14,20 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Calendar;
 
+
 public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.MedicamentoViewHolder> {
 
     private List<Medicamento> medicamentoList;
+    private Context context;
+    private List<Medicamento> medicamentos;
+    private DatabaseHelper dbHelper;
 
     public MedicamentoAdapter(List<Medicamento> medicamentoList) {
+        super(context, 0, medicamentoList);
         this.medicamentoList = medicamentoList;
+        this.context = context;
+        this.medicamentos = medicamentos;
+        this.dbHelper = new DatabaseHelper(context);
     }
 
     @Override
@@ -33,7 +43,7 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
         holder.cantidadTextView.setText("Cantidad: " + medicamento.getCantidad());
         holder.fechaVencimientoTextView.setText("Vence: " + medicamento.getFechaVencimiento());
 
-        // Verificar si el medicamento vence en los próximos 3 meses
+
         if (isExpiringSoon(medicamento.getFechaVencimiento())) {
             holder.nombreTextView.setTextColor(Color.RED);
             holder.fechaVencimientoTextView.setTextColor(Color.RED);
@@ -55,7 +65,7 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
             Calendar expiration = Calendar.getInstance();
             expiration.setTime(sdf.parse(fechaVencimiento));
 
-            // Sumar 3 meses al día de hoy
+
             today.add(Calendar.MONTH, 3);
 
             return expiration.before(today);
@@ -77,4 +87,38 @@ public class MedicamentoAdapter extends RecyclerView.Adapter<MedicamentoAdapter.
             fechaVencimientoTextView = itemView.findViewById(R.id.fechaVencimientoTextView);
         }
     }
+
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_medicamento, parent, false);
+        }
+
+        Medicamento medicamento = getItem(position);
+        TextView nombreTextView = convertView.findViewById(R.id.nombre);
+        TextView cantidadTextView = convertView.findViewById(R.id.cantidad);
+        Button eliminarButton = convertView.findViewById(R.id.btnEliminar);
+        Button actualizarButton = convertView.findViewById(R.id.btnActualizar);
+
+        nombreTextView.setText(medicamento.getNombre());
+        cantidadTextView.setText(String.valueOf(medicamento.getCantidad()));
+
+        eliminarButton.setOnClickListener(v -> {
+            dbHelper.deleteMedicamento(medicamento.getId());
+            medicamentos.remove(position);
+            notifyDataSetChanged();
+        });
+
+        actualizarButton.setOnClickListener(v -> {
+
+            medicamento.setCantidad(medicamento.getCantidad() + 1);
+            dbHelper.updateMedicamento(medicamento);
+            notifyDataSetChanged();
+        });
+
+        return convertView;
+    }
 }
+
+

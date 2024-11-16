@@ -22,7 +22,7 @@ public class EditItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
 
-        // Inicializar vistas
+
         etNombre = findViewById(R.id.etNombre);
         etCantidad = findViewById(R.id.etCantidad);
         etFechaVencimiento = findViewById(R.id.etFechaVencimiento);
@@ -34,16 +34,16 @@ public class EditItemActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        // Obtener el ID del remedio desde el Intent
+
         itemId = getIntent().getIntExtra("ITEM_ID", -1);
         if (itemId != -1) {
             cargarDatosItem();
         }
 
-        // Configurar evento de clic para guardar los cambios
+
         btnGuardar.setOnClickListener(v -> actualizarRemedio());
 
-        // Configurar evento de clic para eliminar el remedio
+
         btnEliminar.setOnClickListener(v -> eliminarRemedio());
     }
 
@@ -57,7 +57,7 @@ public class EditItemActivity extends AppCompatActivity {
                 null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            // Cargar los datos del remedio en los campos correspondientes
+
             etNombre.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NOMBRE)));
             etCantidad.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_CANTIDAD)));
             etFechaVencimiento.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FECHA_VENCIMIENTO)));
@@ -93,7 +93,7 @@ public class EditItemActivity extends AppCompatActivity {
                 new Object[]{nombre, cantidad, fechaVencimiento, mg, presentacion, descripcion, itemId});
 
         Toast.makeText(this, "Producto actualizado", Toast.LENGTH_SHORT).show();
-        finish();  // Volver a la pantalla anterior
+        finish();
     }
 
     private void eliminarRemedio() {
@@ -101,6 +101,6 @@ public class EditItemActivity extends AppCompatActivity {
         db.execSQL("DELETE FROM " + DatabaseHelper.TABLE_NAME + " WHERE " + DatabaseHelper.COLUMN_ID + " = ?", new Object[]{itemId});
 
         Toast.makeText(this, "Producto eliminado", Toast.LENGTH_SHORT).show();
-        finish();  // Volver a la pantalla anterior
+        finish();
     }
 }

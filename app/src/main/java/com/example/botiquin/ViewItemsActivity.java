@@ -33,7 +33,7 @@ public class ViewItemsActivity extends AppCompatActivity {
         medicamentoAdapter = new MedicamentoAdapter(medicamentoList);
         recyclerView.setAdapter(medicamentoAdapter);
 
-        // Cargar la lista de remedios desde la base de datos
+
         loadMedicamentos("");
 
         // Listener para la búsqueda
@@ -52,23 +52,23 @@ public class ViewItemsActivity extends AppCompatActivity {
     }
 
     private void loadMedicamentos(String query) {
-        // Limpiar la lista actual
+
         medicamentoList.clear();
 
-        // Obtener todos los medicamentos desde la base de datos
+
         List<Medicamento> allMedicamentos = databaseHelper.getAllMedicamentos();
 
-        // Filtrar por nombre si es necesario
+
         for (Medicamento medicamento : allMedicamentos) {
             if (TextUtils.isEmpty(query) || medicamento.getNombre().toLowerCase().contains(query.toLowerCase())) {
                 medicamentoList.add(medicamento);
             }
         }
 
-        // Ordenar alfabéticamente
+
         medicamentoList.sort((m1, m2) -> m1.getNombre().compareTo(m2.getNombre()));
 
-        // Actualizar el adaptador
+
         medicamentoAdapter.notifyDataSetChanged();
     }
 }
